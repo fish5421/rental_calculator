@@ -9,6 +9,7 @@ const initialState = {
     isLoading: false,
     interestRate: 0,
 
+
 };
 
 ;
@@ -22,19 +23,46 @@ const options = {
 
 export const updateStateBasedOnPropertyData = createAction('mortgage/updateStateBasedOnPropertyData');
 
+const TIMEOUT_DURATION = 50000;  // Time in milliseconds
+
+const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => {
+        reject(new Error("Request timed out"));
+    }, TIMEOUT_DURATION);
+});
+
 export const getPropertyData = createAsyncThunk('initialProp/getPropertyData', async (address, thunkAPI) => {
     const { dispatch } = thunkAPI;
     const url = `https://zillow-com1.p.rapidapi.com/property?address=${encodeURIComponent(address)}`;
+
     try {
-        const response = await fetch(url, options);
+        const response = await Promise.race([
+            fetch(url, options),
+            timeoutPromise
+        ]);
+
+        if (!response.ok) {
+            // Handle HTTP errors
+            throw new Error(`API returned status: ${response.status}`);
+            console.log("API returned status:", response.status);
+        }
+
         const data = await response.json();
         dispatch(updateStateBasedOnPropertyData(data));  // Dispatch another action to update relevant state
+
         console.log(data);
         return data;
     } catch (err) {
-        console.log(err);
+        
+        // This block will catch either fetch errors or the timeout error
+        console.log('error',err);
+        return thunkAPI.rejectWithValue(new Error("Request timed out"))
+        // Dispatch another action or update state to indicate failure, if needed
     }
 });
+
+
+
 
 export const initialPropSlice = createSlice({
     name: "initialProp",
@@ -64,11 +92,13 @@ export const initialPropSlice = createSlice({
             state.isLoading = false;
             console.log(action.payload);
             state.purchasePrice = 0;
-        },
+            
+    },
         [getPropertyData.pending]: (state) => {
             state.isLoading = true;
             state.purchasePrice = 0;
-        }
+
+        },
 
     }
 });

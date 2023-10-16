@@ -10,6 +10,7 @@ import Results from '../src/Results';
 import { setPurchasePrice, getPropertyData, setAddress } from './app/features/initial-prop-calc/InitialPropSlice';
 import { setRent, setPropertyTaxes, setInsurance, setClosingCosts, setUpfrontRepairs, setRepairs, setVacancy, setCapEx, setMgmtFees, setElectricity, setGas, setWater, setGarbage, setHoa } from './app/features/cash-flow-calc/cashFlowSlice';
 import { m, motion } from "framer-motion";
+import TimeoutModal from './Modal';
 
 
 
@@ -37,6 +38,8 @@ export default function Inputs() {
     const hoa = useSelector(state => state.cashFlow.hoa);
     const monthly_payment = useSelector(state => state.mortgage.monthlyPayment);
     const [animateTriggers, setAnimateTriggers] = useState({});
+    const hasTimedOut = useSelector((state) => state.initProp.hasTimedOut);
+
 
     const valueChange = {
         initial: { scale: 1, opacity: 1 },
@@ -53,6 +56,10 @@ export default function Inputs() {
         dispatch(dispatchFunction(e.target.value));
         setStateFunc(prevState => ({ ...prevState, [label]: true }));
         setTimeout(() => setStateFunc(prevState => ({ ...prevState, [label]: false })), 300);
+    };
+
+    const handleClose = () => {
+        dispatch(setTimeoutState(false));  // Reset the hasTimedOut state
     };
 
     // import { setPurchasePrice} from './app/features/mortgage-calc/mortgageSlice';
@@ -257,6 +264,8 @@ export default function Inputs() {
                             Search
                         </Button>
                     </div>
+                    {console.log('hasTimedOut', hasTimedOut)}
+
 
                     <MortgageCalculation />
 
