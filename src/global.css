@@ -1,0 +1,9 @@
+/* styles/globals.css */
+@layer utilities {
+  .bg-green-gradient {
+    background: linear-gradient(90deg, #a8ff78, #78ffd6);
+  }
+  .bg-red-gradient {
+    background: linear-gradient(90deg, #f85032, #e73827);
+  }
+}

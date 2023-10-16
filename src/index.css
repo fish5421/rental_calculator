@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+
+@layer utilities {
+  .bg-green-gradient {
+    background: linear-gradient(90deg, #a8ff78, #78ffd6);
+  }
+  .bg-red-gradient {
+    background: linear-gradient(90deg, #f85032, #e73827);
+  }
+
+  .custom-bg {
+    background-color:#af99ff;
+background-image:
+radial-gradient(at 85% 99%, hsla(165,91%,78%,1) 0px, transparent 50%),
+radial-gradient(at 8% 52%, hsla(199,89%,64%,1) 0px, transparent 50%);
+  }
+
+
+}
+
+@tailwind utilities;
