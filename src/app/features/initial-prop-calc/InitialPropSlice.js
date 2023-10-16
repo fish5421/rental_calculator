@@ -1,6 +1,6 @@
 import { createSlice, createAction, createAsyncThunk } from "@reduxjs/toolkit";
 
-const rapid_key = import.meta.env.RAPID_API_KEY
+const rapid_key = import.meta.env.VITE_RAPID_API_KEY
 
 
 const initialState = {
